@@ -34,12 +34,6 @@ public:
 
     ~CFoolHeap() override = default;
 
-    void print() override {
-        for (auto elem: heap)
-            std::cout << elem << ' ';
-        std::cout << std::endl;
-    }
-
     void Meld(IHeap& other) override {
         auto second = dynamic_cast<CFoolHeap*>(&other);
         heap.insert(heap.end(), second->heap.begin(), second->heap.end());

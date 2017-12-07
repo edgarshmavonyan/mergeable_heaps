@@ -7,12 +7,6 @@ class CSkewNode {
     CSkewNode *left, *right;
     friend class CSkewHeap;
 
-    void print() {
-        if (left) left->print();
-        std::cout << key << ' ';
-        if (right) right->print();
-    }
-
     void preOrderDelete() {
         if (left) left->preOrderDelete();
         delete left;
@@ -94,11 +88,4 @@ public:
 
         return k;
     }
-
-    void print() override {
-        if (!root) return;
-        root->print();
-    }
-
-
 };

@@ -12,20 +12,6 @@ class CBinomialNode {
     int degree;
 
     friend class CBinomialHeap;
-
-    inline static bool Compare(const CBinomialNode& first, const CBinomialNode& second) {
-        return first.degree < second.degree;
-    }
-
-
-    void printTree() {
-        /*
-        for (auto elem : children)
-            elem.printTree();
-        */
-        std::cout << "\\mytree " << key << ' ';
-    }
-
 public:
 
     explicit CBinomialNode(int key) : key(key), parent(nullptr), child(nullptr), next(nullptr), degree(0) {}
@@ -87,18 +73,6 @@ private:
         }
     }
 
-    inline static CBinomialNode* MeldTree(CBinomialNode* first, CBinomialNode* second) {
-        if (second->key < first->key)
-            std::swap(first, second);
-        second->parent = first;
-        CBinomialNode* tmp = second->next;
-        second->next = first->child;
-        first->child = second;
-        first->next = tmp;
-        ++first->degree;
-        return first;
-    }
-
 public:
     CBinomialHeap() : root(nullptr) {}
 
@@ -109,10 +83,6 @@ public:
     ~CBinomialHeap() override {
         preOrderDeleter(root);
     }
-
-//    CBinomialHeap(CBinomialHeap&& other) noexcept : roots(std::move(other.roots)) {}
-
-//    explicit CBinomialHeap(std::list<CBinomialNode>&& trees) : roots(trees) {}
 
     int GetMin() override {
         CBinomialNode* iter = root;
@@ -136,10 +106,6 @@ public:
             return;
         }
 
-//        std::cout << double(clock() - t) / CLOCKS_PER_SEC << ' ';
-
-//        t = clock();
-
         CBinomialNode *lefter = nullptr, *iter1 = root, *iter2 = second->root, *temp;
 
         while (iter1 && iter2) {
@@ -162,14 +128,7 @@ public:
             lefter->next = iter2;
         }
 
-//        std::cout << double(clock() - t) / CLOCKS_PER_SEC << ' ';
-
-//        t = clock();
-
         checkFeasibility();
-
-//        std::cout << double(clock() - t) / CLOCKS_PER_SEC << std::endl;
-
     }
 
 
@@ -211,17 +170,4 @@ public:
 
         return res;
     }
-
-    void print() override {
-        int count = 0;
-        /*
-        for (auto el : roots) {
-            std::cout << "tree number " << count << ' ';
-            el.printTree();
-            count++;
-            std::cout << std::endl;
-        }
-        */
-    }
-
 };

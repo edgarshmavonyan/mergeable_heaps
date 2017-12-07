@@ -67,7 +67,4 @@ public:
             delete element;
     }
 
-    void Print(int index) {
-        list[index]->print();
-    }
 };

@@ -18,5 +18,4 @@ public:
 
     virtual ~IHeap() = default;
 
-    virtual void print() = 0;
 };
