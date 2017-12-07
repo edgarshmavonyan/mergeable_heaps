@@ -2,7 +2,6 @@
 #include "IHeap.h"
 #include <vector>
 #include <algorithm>
-#include <cstring>
 
 class CFoolHeap : public IHeap {
     std::vector<int> heap;

@@ -1,8 +1,5 @@
 #include <iostream>
-#include <vector>
 #include "IHeap.h"
-#include <list>
-//#include <forward_list>
 
 class CBinomialNode {
     int key;

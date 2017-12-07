@@ -1,6 +1,5 @@
 #include <iostream>
 #include "IHeap.h"
-#include <vector>
 
 class CSkewNode {
     int key;
