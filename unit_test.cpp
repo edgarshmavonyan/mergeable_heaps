@@ -8,8 +8,8 @@
 
 
 TEST(UniversalTest, DISABLED_SingleUniversalTest) {
-    std::mt19937 generator;
-    int size = 1000000;
+    std::mt19937 generator(time(0));
+    size_t size = 1000000;
     std::vector<int> values(size);
     for (int i = 0; i < size; i++) {
         values[i] = generator();
@@ -36,7 +36,7 @@ TEST(UniversalTest, DISABLED_SingleUniversalTest) {
 }
 
 TEST(UniversalTest, SingleRunTimeTest) {
-    std::mt19937 generator;
+    std::mt19937 generator(time(0));
     int size = 1000000;
     std::vector<int> values(size);
     for (int i = 0; i < size; i++) {
