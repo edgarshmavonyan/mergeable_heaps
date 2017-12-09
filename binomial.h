@@ -3,7 +3,6 @@
 
 class CBinomialNode {
     int key;
-    CBinomialNode* parent;
     CBinomialNode* child;
     CBinomialNode* next;
     int degree;
@@ -11,7 +10,7 @@ class CBinomialNode {
     friend class CBinomialHeap;
 public:
 
-    explicit CBinomialNode(int key) : key(key), parent(nullptr), child(nullptr), next(nullptr), degree(0) {}
+    explicit CBinomialNode(int key) : key(key), child(nullptr), next(nullptr), degree(0) {}
 };
 
 class CBinomialHeap: public IHeap {
@@ -48,7 +47,6 @@ private:
                 continue;
             }
             if (leftPointer->key <= rightPointer->key) {
-                rightPointer->parent = leftPointer;
                 CBinomialNode* tmp = rightPointer->next;
                 rightPointer->next = leftPointer->child;
                 leftPointer->child = rightPointer;
@@ -56,7 +54,6 @@ private:
                 ++leftPointer->degree;
                 rightPointer = leftPointer->next;
             } else {
-                leftPointer->parent = rightPointer;
                 leftPointer->next = rightPointer->child;
                 rightPointer->child = leftPointer;
                 ++rightPointer->degree;
@@ -155,7 +152,6 @@ public:
         lefterIter = nullptr;
 
         while (iter) {
-            iter->parent = nullptr;
             lefterMin = iter->next;
             iter->next = lefterIter;
             children.root = lefterIter = iter;

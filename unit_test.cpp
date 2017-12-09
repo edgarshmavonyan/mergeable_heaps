@@ -1,13 +1,14 @@
 #include <iostream>
 #include <vector>
 #include "heaplist.h"
+#include <fstream>
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <random>
 
 
 
-TEST(UniversalTest, DISABLED_SingleUniversalTest) {
+TEST(UniversalTest, SingleUniversalTest) {
     std::mt19937 generator(time(0));
     size_t size = 1000000;
     std::vector<int> values(size);
@@ -18,14 +19,13 @@ TEST(UniversalTest, DISABLED_SingleUniversalTest) {
     for (int type = 0; type < 3; type++) {
         HeapList first(type), second(3);
 
-        first.AddHeap(size);
-        second.AddHeap(size);
+        first.AddHeap(values[0]);
+        second.AddHeap(values[0]);
         std::cout << "Size " << size << std::endl;
 
         for (int i = 0; i < size - 1; i++) {
-            int next = generator();
-            first.Insert(0, next);
-            second.Insert(0, next);
+            first.Insert(0, values[i + 1]);
+            second.Insert(0, values[i + 1]);
             EXPECT_TRUE(first.GetMin(0) == second.GetMin(0));
         }
 
@@ -35,10 +35,12 @@ TEST(UniversalTest, DISABLED_SingleUniversalTest) {
     }
 }
 
-TEST(UniversalTest, SingleRunTimeTest) {
+TEST(UniversalTest, DISABLED_SingleRunTimeTest) {
     std::mt19937 generator(time(0));
     int size = 1000000;
     std::vector<int> values(size);
+
+
     for (int i = 0; i < size; i++) {
         values[i] = generator();
     }
@@ -46,15 +48,15 @@ TEST(UniversalTest, SingleRunTimeTest) {
     for (int type = 0; type < 3; type++) {
         HeapList first(type), second(3);
 
-        first.AddHeap(size);
-        second.AddHeap(size);
+        first.AddHeap(values[0]);
+        second.AddHeap(values[0]);
         std::cout << "Size " << size << std::endl;
 
         clock_t t = clock();
 
         for (int i = 0; i < size - 1; i++) {
-            first.Insert(0, values[i]);
-            second.Insert(0, values[i]);
+            first.Insert(0, values[i + 1]);
+            second.Insert(0, values[i + 1]);
             EXPECT_TRUE(first.GetMin(0) == second.GetMin(0));
         }
 
@@ -78,10 +80,6 @@ TEST(UniversalTest, SingleRunTimeTest) {
         std::cout << "time of extracting from heap fool " << double(t) / CLOCKS_PER_SEC << std::endl;
     }
 }
-
-
-
-
 
 int main(int argc, char* argv[]) {
     testing::InitGoogleTest(&argc, argv);
