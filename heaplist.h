@@ -29,20 +29,17 @@ public:
 
         switch(type) {
             case Leftist: {
-                std::cout << "Inserted to Leftist" << std::endl;
                 list.push_back(new CLeftistHeap(key));
             } break;
             case Binomial: {
-                std::cout << "Inserted to Binomial" << std::endl;
                 list.push_back(new CBinomialHeap(key));
             } break;
 
             case Skew: {
-                std::cout << "Inserted to Skew" << std::endl;
                 list.push_back(new CSkewHeap(key));
             } break;
             case Fool: {
-                std::cout << "Inserted to Fool" << std::endl;
+//                std::cout << "Inserted to Fool" << std::endl;
                 list.push_back(new CFoolHeap(key));
             } break;
         }
