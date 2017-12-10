@@ -1,4 +1,7 @@
-#mergeable_heaps
+Mergeable_heaps
+===============
+- - - - 
+
 We've implemented three most used mergeable heaps:
 
 1) Binomial
