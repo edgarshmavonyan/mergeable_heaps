@@ -17,7 +17,8 @@ TEST(UniversalTest, SingleUniversal_Test) {
     }
 
     for (int type = 0; type < 3; type++) {
-        HeapList tested(type), fool(3);
+        HeapList tested(type);
+        FoolHeapList fool;
 
         tested.AddHeap(values[0]);
         fool.AddHeap(values[0]);
@@ -46,7 +47,8 @@ TEST(UniversalTest, SingleRunTime_Test) {
     }
 
     for (int type = 0; type < 3; type++) {
-        HeapList tested(type), fool(3);
+        HeapList tested(type);
+        FoolHeapList fool;
 
         tested.AddHeap(values[0]);
         fool.AddHeap(values[0]);
@@ -95,7 +97,7 @@ TEST(MergeTest, MergeCorrectness_Test) {
     // it does not change the correctness of the test
 
     for (int type = 0; type < 3; type++) {
-        HeapList fool(3);
+        FoolHeapList fool;
         fool.AddHeap(values[0]);
         HeapList tested(type);
 
@@ -133,7 +135,7 @@ TEST(MergeTest, MergeCompareTime_Test) {
     // it does not change the correctness of the test
 
     for (int type = 0; type < 3; type++) {
-        HeapList fool(3);
+        FoolHeapList fool;
         fool.AddHeap(values[0]);
         HeapList tested(type);
 

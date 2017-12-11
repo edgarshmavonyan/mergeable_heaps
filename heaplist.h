@@ -65,3 +65,24 @@ public:
     }
 
 };
+
+
+class BinomialHeapList: public HeapList {
+public:
+    BinomialHeapList() : HeapList(0) {}
+};
+
+class SkewHeapList: public HeapList {
+public:
+    SkewHeapList() : HeapList(2) {}
+};
+
+class LeftistHeapList: public HeapList {
+public:
+    LeftistHeapList() : HeapList(1) {}
+};
+
+class FoolHeapList: public HeapList {
+public:
+    FoolHeapList() : HeapList(3) {}
+};

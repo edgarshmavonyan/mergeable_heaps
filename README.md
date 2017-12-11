@@ -43,3 +43,13 @@ They use supporting friend classes of nodes.
 The file with tests is unit_test.cpp.
 
 They check the time of insert, extract and meld and the correctness of the implementation using CFoolHeap which is implemented using stl.
+
+To call the heap of the required type there are inheritants of HeapList:
+
+1) BinomialHeapList
+
+2) LeftistHeapList
+
+3) SkewHeapList
+
+4) FoolHeapList
