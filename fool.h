@@ -15,6 +15,10 @@ public:
 
     explicit CFoolHeap(int key) : heap(1, key) {}
 
+    explicit operator bool() const override {
+        return (!heap.empty());
+    }
+
     void Insert(int key) override {
         heap.push_back(key);
         std::push_heap(heap.begin(), heap.end(), comp);

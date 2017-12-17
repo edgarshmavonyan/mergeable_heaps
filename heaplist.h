@@ -4,6 +4,7 @@
 #include "binomial.h"
 #include "fool.h"
 
+#pragma once
 
 class HeapList {
     std::vector<IHeap*> list_;
@@ -51,13 +52,22 @@ public:
     }
 
     int ExtractMin(int index) {
-        return list_[index]->ExtractMin();
+        int res = list_[index]->ExtractMin();
+        if (!(*list_[index])) {
+            delete list_[index];
+            list_[index] = nullptr;
+        }
+        return res;
     }
 
     void Meld(int index1, int index2) {
 
         list_[index1]->Meld(*list_[index2]);
         list_[index2] = nullptr;
+    }
+
+    bool Empty(int index) {
+        return !bool(list_[index]);
     }
 
     ~HeapList() {

@@ -31,6 +31,10 @@ public:
 
     CBinaryHeap() : root_(nullptr) {}
 
+    explicit operator bool() const override {
+        return bool(root_);
+    }
+
     ~CBinaryHeap() override {
         if (!root_) return;
         root_->preOrderDelete();

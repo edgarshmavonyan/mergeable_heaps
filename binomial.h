@@ -87,7 +87,7 @@ private:
         }
     }
 
-    void InsertList(CBinomialNode* otherRoot) {
+    void InsertList(CBinomialNode*& otherRoot) {
 
         CBinomialNode *lefter = nullptr, *iter1 = root_, *iter2 = otherRoot, *temp;
 
@@ -142,6 +142,10 @@ public:
 
     explicit CBinomialHeap(CBinomialNode* root) : root_(root) {}
 
+    explicit operator bool() const override {
+        return bool(root_);
+    }
+
     ~CBinomialHeap() override {
         preOrderDeleter(root_);
     }
@@ -153,8 +157,6 @@ public:
     }
 
     void Meld(IHeap& other) override {
-
-        clock_t t = clock();
 
         auto second = dynamic_cast<CBinomialHeap*>(&other);
 

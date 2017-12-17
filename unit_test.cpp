@@ -1,11 +1,10 @@
 #include <iostream>
 #include <vector>
-#include "heaplist.h"
 #include <fstream>
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <random>
-
+#include "testGenerator.h"
 
 
 TEST(UniversalTest, SingleUniversal_Test) {
@@ -164,6 +163,82 @@ TEST(MergeTest, MergeCompareTime_Test) {
         }
     }
 }
+
+TEST(mainTest, randomTest) {
+    std::vector<int> values, order;
+
+    int heapNumber = 100000;
+    size_t size = 100000;
+    int testNumber = 100000;
+
+    FoolHeapList fool;
+    BinomialHeapList binomial;
+    LeftistHeapList leftist;
+    SkewHeapList skew;
+
+    generateSomeValues(size, values);
+    generateHeapOrder(size, heapNumber, order);
+    generateHeaps(size, heapNumber, fool, order, values);
+    generateHeaps(size, heapNumber, binomial, order, values);
+    generateHeaps(size, heapNumber, skew, order, values);
+    generateHeaps(size, heapNumber, leftist, order, values);
+
+    std::vector<std::pair<int, std::pair<int, int> > > sequence;
+
+    generateTestSequences(heapNumber, testNumber, sequence);
+
+    for (int i = 0; i < testNumber; i++) {
+        auto& ind = sequence[i].second;
+        int type = sequence[i].first;
+
+        ASSERT_TRUE(fool.Empty(ind.first) == binomial.Empty(ind.first));
+        ASSERT_TRUE(fool.Empty(ind.first) == skew.Empty(ind.first));
+        ASSERT_TRUE(fool.Empty(ind.first) == leftist.Empty(ind.first));
+        EXPECT_TRUE(fool.Empty(ind.second) == binomial.Empty(ind.second));
+        EXPECT_TRUE(fool.Empty(ind.second) == skew.Empty(ind.second));
+        EXPECT_TRUE(fool.Empty(ind.second) == leftist.Empty(ind.second));
+
+        switch(type) {
+            case 0 : {
+                if (!fool.Empty(ind.first)) {
+                    int foolRes = fool.GetMin(ind.first);
+                    EXPECT_EQ(foolRes, binomial.GetMin(ind.first));
+                    EXPECT_EQ(foolRes, skew.GetMin(ind.first));
+                    EXPECT_EQ(foolRes, leftist.GetMin(ind.first));
+                }
+                break;
+            }
+            case 1: {
+                if (!fool.Empty(ind.first)) {
+                    int foolRes = fool.ExtractMin(ind.first);
+                    EXPECT_EQ(foolRes, binomial.ExtractMin(ind.first));
+                    EXPECT_EQ(foolRes, skew.ExtractMin(ind.first));
+                    EXPECT_EQ(foolRes, leftist.ExtractMin(ind.first));
+                }
+                break;
+            }
+            case 2: {
+                if (fool.Empty(ind.first) || fool.Empty(ind.second) || ind.first == ind.second)
+                    continue;
+                fool.Meld(ind.first, ind.second);
+                binomial.Meld(ind.first, ind.second);
+                skew.Meld(ind.first, ind.second);
+                leftist.Meld(ind.first, ind.second);
+
+                int foolRes = fool.GetMin(ind.first);
+                EXPECT_EQ(foolRes, binomial.GetMin(ind.first));
+                EXPECT_EQ(foolRes, skew.GetMin(ind.first));
+                EXPECT_EQ(foolRes, leftist.GetMin(ind.first));
+                break;
+            }
+            default: {
+                EXPECT_TRUE(false);
+            }
+        }
+    }
+}
+
+
 
 int main(int argc, char* argv[]) {
     testing::InitGoogleTest(&argc, argv);

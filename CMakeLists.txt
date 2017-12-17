@@ -7,6 +7,6 @@ add_subdirectory(lib/googletest-master)
 include_directories(lib/googletest-master/googletest/include)
 include_directories(lib/googletest-master/googlemock/include)
 
-set(SOURCE_FILES binomial.h IHeap.h leftist.h heaplist.h skew.h fool.h unit_test.cpp binary.h)
+set(SOURCE_FILES binomial.h IHeap.h leftist.h heaplist.h skew.h fool.h unit_test.cpp binary.h testGenerator.h)
 add_executable(heaps ${SOURCE_FILES})
 target_link_libraries(heaps gtest gtest_main)

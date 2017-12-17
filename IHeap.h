@@ -15,6 +15,8 @@ public:
 
     virtual void Meld(IHeap& other) = 0;
 
+    virtual explicit operator bool() const = 0;
+
     virtual ~IHeap() = default;
 
 };
