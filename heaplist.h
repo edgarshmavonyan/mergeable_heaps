@@ -39,7 +39,6 @@ public:
                 list.push_back(new CSkewHeap(key));
             } break;
             case Fool: {
-//                std::cout << "Inserted to Fool" << std::endl;
                 list.push_back(new CFoolHeap(key));
             } break;
         }
