@@ -5,21 +5,20 @@
 
 template<typename NodeType>
 class CBinaryHeap: public IHeap {
-    NodeType* root;
 
-private:
+    NodeType* root_;
 
-    explicit CBinaryHeap(NodeType* root) : root(root) {}
+    explicit CBinaryHeap(NodeType* root) : root_(root) {}
 
     static NodeType* Meld(NodeType* first, NodeType* second) {
         if (!first)
             return second;
         if (!second)
             return first;
-        if (first->key > second->key)
+        if (first->key_ > second->key_)
             std::swap(first, second);
 
-        first->right = Meld(first->right, second);
+        first->right_ = Meld(first->right_, second);
 
         first->relax();
 
@@ -28,26 +27,26 @@ private:
 
 public:
 
-    explicit CBinaryHeap(int key) : root(new NodeType(key)) {}
+    explicit CBinaryHeap(int key) : root_(new NodeType(key)) {}
 
-    CBinaryHeap() : root(nullptr) {}
+    CBinaryHeap() : root_(nullptr) {}
 
     ~CBinaryHeap() override {
-        if (!root) return;
-        root->preOrderDelete();
-        delete root;
+        if (!root_) return;
+        root_->preOrderDelete();
+        delete root_;
     }
 
     int GetMin() override {
-        return root->key;
+        return root_->key_;
     }
 
     void Meld(IHeap& other) override {
         auto second = dynamic_cast<CBinaryHeap*>(&other);
 
-        root = Meld(root, second->root);
+        root_ = Meld(root_, second->root_);
 
-        second->root = nullptr;
+        second->root_ = nullptr;
     }
 
     void Insert(int key) override {
@@ -55,21 +54,21 @@ public:
 
         Meld(temp);
 
-        temp.root = nullptr;
+        temp.root_ = nullptr;
     }
 
     int ExtractMin() override {
-        int k = root->key;
+        int k = root_->key_;
 
-        CBinaryHeap left(root->left), right(root->right);
+        CBinaryHeap left(root_->left_), right(root_->right_);
 
-        delete root;
+        delete root_;
 
         left.Meld(right);
 
         *this = left;
 
-        left.root = right.root = nullptr;
+        left.root_ = right.root_ = nullptr;
 
         return k;
     }

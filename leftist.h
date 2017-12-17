@@ -5,30 +5,30 @@
 
 
 class CLeftistNode {
-    int key;
-    int dist;
-    CLeftistNode *left, *right;
+    int key_;
+    int dist_;
+    CLeftistNode *left_, *right_;
     friend class CBinaryHeap<CLeftistNode>;
 
     inline void relax() {
-        int distLeft = (left ? left->dist + 1 : 1);
-        int distRight = (right ? right->dist + 1 : 1);
-        dist = std::min(distLeft, distRight);
+        int distLeft = (left_ ? left_->dist_ + 1 : 1);
+        int distRight = (right_ ? right_->dist_ + 1 : 1);
+        dist_ = std::min(distLeft, distRight);
 
         if (distLeft < distRight)
-            std::swap(left, right);
+            std::swap(left_, right_);
     }
 
     void preOrderDelete() {
-        if (left) left->preOrderDelete();
-        delete left;
-        if (right) right->preOrderDelete();
-        delete right;
+        if (left_) left_->preOrderDelete();
+        delete left_;
+        if (right_) right_->preOrderDelete();
+        delete right_;
     }
 
 public:
 
-    explicit CLeftistNode(int key) : key(key), dist(0), left(nullptr), right(nullptr) {}
+    explicit CLeftistNode(int key) : key_(key), dist_(0), left_(nullptr), right_(nullptr) {}
 
 };
 

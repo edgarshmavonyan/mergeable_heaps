@@ -6,60 +6,62 @@
 
 
 class HeapList {
-    std::vector<IHeap*> list;
+    std::vector<IHeap*> list_;
 
-    enum Heap {
+    enum HeapType {
         Binomial,
         Leftist,
         Skew,
         Fool
     };
 
-    const Heap type = Fool;
+    const HeapType TYPE = Fool;
 
 public:
 
-    HeapList(int typ) : list(), type(static_cast<Heap>(typ)) {}
+    explicit HeapList(int typ) : list_(), TYPE(static_cast<HeapType>(typ)) {}
+
+    explicit HeapList(HeapType type) : list_(), TYPE(type) {}
 
     void Insert(int index, int val) {
-        list[index]->Insert(val);
+        list_[index]->Insert(val);
     }
 
     void AddHeap(int key) {
 
-        switch(type) {
+        switch(TYPE) {
             case Leftist: {
-                list.push_back(new CLeftistHeap(key));
+                list_.push_back(new CLeftistHeap(key));
             } break;
             case Binomial: {
-                list.push_back(new CBinomialHeap(key));
+                list_.push_back(new CBinomialHeap(key));
             } break;
 
             case Skew: {
-                list.push_back(new CSkewHeap(key));
+                list_.push_back(new CSkewHeap(key));
             } break;
             case Fool: {
-                list.push_back(new CFoolHeap(key));
+                list_.push_back(new CFoolHeap(key));
             } break;
         }
     }
 
     int GetMin(int index) {
-        return list[index]->GetMin();
+        return list_[index]->GetMin();
     }
 
     int ExtractMin(int index) {
-        return list[index]->ExtractMin();
+        return list_[index]->ExtractMin();
     }
 
     void Meld(int index1, int index2) {
 
-        list[index1]->Meld(*list[index2]);
-        list[index2] = nullptr;
+        list_[index1]->Meld(*list_[index2]);
+        list_[index2] = nullptr;
     }
 
     ~HeapList() {
-        for (auto element : list)
+        for (auto element : list_)
             delete element;
     }
 

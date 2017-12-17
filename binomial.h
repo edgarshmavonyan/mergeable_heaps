@@ -2,91 +2,154 @@
 #include "IHeap.h"
 
 class CBinomialNode {
-    int key;
-    CBinomialNode* child;
-    CBinomialNode* next;
-    int degree;
+    int key_;
+    CBinomialNode* child_;
+    CBinomialNode* next_;
+    int degree_;
 
     friend class CBinomialHeap;
 public:
 
-    explicit CBinomialNode(int key) : key(key), child(nullptr), next(nullptr), degree(0) {}
+    explicit CBinomialNode(int key) : key_(key), child_(nullptr), next_(nullptr), degree_(0) {}
 };
 
 class CBinomialHeap: public IHeap {
-    CBinomialNode* root;
+    CBinomialNode* root_;
 
 private:
+
+    inline void shiftPointers(CBinomialNode*& lefterPointer,
+                              CBinomialNode*& leftPointer, CBinomialNode*& rightPointer) {
+        lefterPointer = leftPointer;
+        leftPointer = rightPointer;
+        rightPointer = rightPointer->next_;
+    }
+
+    inline void linkRightTreetoLeft(CBinomialNode*& lefterPointer,
+                                    CBinomialNode*& leftPointer, CBinomialNode*& rightPointer) {
+        CBinomialNode* tmp = rightPointer->next_;
+        rightPointer->next_ = leftPointer->child_;
+        leftPointer->child_ = rightPointer;
+        leftPointer->next_ = tmp;
+        ++leftPointer->degree_;
+        rightPointer = leftPointer->next_;
+    }
+
+    inline void linkLeftTreetoRight(CBinomialNode*& lefterPointer,
+                                    CBinomialNode*& leftPointer, CBinomialNode*& rightPointer) {
+        leftPointer->next_ = rightPointer->child_;
+        rightPointer->child_ = leftPointer;
+        ++rightPointer->degree_;
+        if (lefterPointer)
+            lefterPointer->next_ = rightPointer;
+        else
+            root_ = rightPointer;
+        leftPointer = rightPointer;
+        rightPointer = leftPointer->next_;
+    }
+
+    inline void swapTrees(CBinomialNode*& lefterPointer,
+                          CBinomialNode*& leftPointer, CBinomialNode*& rightPointer) {
+        if (lefterPointer)
+            lefterPointer->next_ = rightPointer;
+        else
+            root_ = rightPointer;
+        leftPointer->next_ = rightPointer->next_;
+        rightPointer->next_ = leftPointer;
+        std::swap(leftPointer, rightPointer);
+    }
 
     static void preOrderDeleter(CBinomialNode* cur) {
         if (!cur)
             return;
-        preOrderDeleter(cur->next);
-        preOrderDeleter(cur->child);
+        preOrderDeleter(cur->next_);
+        preOrderDeleter(cur->child_);
         delete cur;
     }
 
     void checkFeasibility() {
-        if (!root)
+        if (!root_)
             return;
-        CBinomialNode *leftPointer = root, *rightPointer = root->next, *lefterPointer = nullptr;
+        CBinomialNode *leftPointer = root_, *rightPointer = root_->next_, *lefterPointer = nullptr;
         while (rightPointer) {
-            if (rightPointer->degree < leftPointer->degree) {
-                if (lefterPointer)
-                    lefterPointer->next = rightPointer;
-                else
-                    root = rightPointer;
-                leftPointer->next = rightPointer->next;
-                rightPointer->next = leftPointer;
-                std::swap(leftPointer, rightPointer);
-            }
-            if (leftPointer->degree != rightPointer->degree) {
-                lefterPointer = leftPointer;
-                leftPointer = rightPointer;
-                rightPointer = rightPointer->next;
+            if (rightPointer->degree_ < leftPointer->degree_)
+                swapTrees(lefterPointer, leftPointer, rightPointer);
+
+            if (leftPointer->degree_ != rightPointer->degree_) {
+                shiftPointers(lefterPointer, leftPointer, rightPointer);
                 continue;
             }
-            if (leftPointer->key <= rightPointer->key) {
-                CBinomialNode* tmp = rightPointer->next;
-                rightPointer->next = leftPointer->child;
-                leftPointer->child = rightPointer;
-                leftPointer->next = tmp;
-                ++leftPointer->degree;
-                rightPointer = leftPointer->next;
-            } else {
-                leftPointer->next = rightPointer->child;
-                rightPointer->child = leftPointer;
-                ++rightPointer->degree;
-                if (lefterPointer)
-                    lefterPointer->next = rightPointer;
-                else
-                    root = rightPointer;
-                leftPointer = rightPointer;
-                rightPointer = leftPointer->next;
+
+            if (leftPointer->key_ <= rightPointer->key_)
+                linkRightTreetoLeft(lefterPointer, leftPointer, rightPointer);
+            else
+                linkLeftTreetoRight(lefterPointer, leftPointer, rightPointer);
+        }
+    }
+
+    void InsertList(CBinomialNode* otherRoot) {
+
+        CBinomialNode *lefter = nullptr, *iter1 = root_, *iter2 = otherRoot, *temp;
+
+        while (iter1 && iter2) {
+            if (iter1->degree_ <= iter2->degree_) {
+                lefter = iter1;
+                iter1 = iter1->next_;
+                continue;
             }
+            if (lefter)
+                lefter->next_ = iter2;
+            else
+                root_ = iter2;
+            temp = iter2->next_;
+            iter2->next_ = iter1;
+            lefter = iter2;
+            iter2 = temp;
+        }
+
+        if (iter2) {
+            lefter->next_ = iter2;
+        }
+    }
+
+    std::pair<CBinomialNode*, CBinomialNode*> GetMin_() {
+        CBinomialNode* lefterIter = nullptr, *iter = root_, *itMin = root_, *lefterMin = nullptr;
+        int res = iter->key_;
+        while (iter) {
+            if (res > iter->key_)
+                res = iter->key_, itMin = iter, lefterMin = lefterIter;
+            lefterIter = iter;
+            iter = iter->next_;
+        }
+
+        return std::make_pair(lefterMin, itMin);
+    }
+
+    static void reverseList(CBinomialNode*& root) {
+        CBinomialNode* iter = root, *lefterIter = nullptr, *temp;
+        while (iter) {
+            temp = iter->next_;
+            iter->next_ = lefterIter;
+            root = lefterIter = iter;
+            iter = temp;
         }
     }
 
 public:
-    CBinomialHeap() : root(nullptr) {}
+    CBinomialHeap() : root_(nullptr) {}
 
-    explicit CBinomialHeap(int key) : root(new CBinomialNode(key)) {}
+    explicit CBinomialHeap(int key) : root_(new CBinomialNode(key)) {}
 
-    explicit CBinomialHeap(CBinomialNode* root) : root(root) {}
+    explicit CBinomialHeap(CBinomialNode* root) : root_(root) {}
 
     ~CBinomialHeap() override {
-        preOrderDeleter(root);
+        preOrderDeleter(root_);
     }
 
     int GetMin() override {
-        CBinomialNode* iter = root;
-        int res = iter->key;
-        while (iter) {
-            if (res > iter->key)
-                res = iter->key;
-            iter = iter->next;
-        }
-        return res;
+        auto min = GetMin_();
+
+        return min.second->key_;
     }
 
     void Meld(IHeap& other) override {
@@ -95,32 +158,12 @@ public:
 
         auto second = dynamic_cast<CBinomialHeap*>(&other);
 
-        if (!root) {
-            root = second->root;
+        if (!root_) {
+            root_ = second->root_;
             return;
         }
 
-        CBinomialNode *lefter = nullptr, *iter1 = root, *iter2 = second->root, *temp;
-
-        while (iter1 && iter2) {
-            if (iter1->degree <= iter2->degree) {
-                lefter = iter1;
-                iter1 = iter1->next;
-                continue;
-            }
-            if (lefter)
-                lefter->next = iter2;
-            else
-                root = iter2;
-            temp = iter2->next;
-            iter2->next = iter1;
-            lefter = iter2;
-            iter2 = temp;
-        }
-
-        if (iter2) {
-            lefter->next = iter2;
-        }
+        InsertList(second->root_);
 
         checkFeasibility();
     }
@@ -129,37 +172,25 @@ public:
     void Insert(int key) override {
         auto temp = CBinomialHeap(key);
         Meld(temp);
-        temp.root = nullptr;
+        temp.root_ = nullptr;
     }
 
     int ExtractMin() override {
 
-        CBinomialNode* lefterIter = nullptr, *iter = root, *itMin = root, *lefterMin = nullptr;
-        int res = iter->key;
-        while (iter) {
-            if (res > iter->key)
-                res = iter->key, itMin = iter, lefterMin = lefterIter;
-            lefterIter = iter;
-            iter = iter->next;
-        }
-        if (lefterMin) {
-            lefterMin->next = itMin->next;
+        auto min = GetMin_();
+
+        int res = min.second->key_;
+
+        if (min.first) {
+            min.first->next_ = min.second->next_;
         } else
-            root = itMin->next;
+            root_ = min.second->next_;
 
-        CBinomialHeap children(itMin->child);
-        iter = itMin->child;
-        lefterIter = nullptr;
-
-        while (iter) {
-            lefterMin = iter->next;
-            iter->next = lefterIter;
-            children.root = lefterIter = iter;
-            iter = lefterMin;
-        }
+        CBinomialHeap children(min.second->child_);
+        reverseList(children.root_);
 
         Meld(children);
-        children.root = nullptr;
+        children.root_ = nullptr;
 
         return res;
     }
